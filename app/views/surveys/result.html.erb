@@ -1,0 +1,97 @@
+<h1>Surveys#result</h1>
+<p>Find me in app/views/surveys/result.html.erb</p>
+
+<%# 'notice' and flash hash are passed in from redirect_to in create method %>
+<p id="notice"><%= notice %>
+<%# </p> %>
+<h1>Submitted Information</h1>
+
+<%#  TO DISPLAY ERROS ON CLASS INSTANCE or OBJECT CREATION from ACTION METHOD %>
+<%#  WILL DISPLAY ONLY ON RENDER FROM CREATE METHOD %>
+<% if @user_survey.errors.any? %>
+    <div id="error_explanation">
+        <%= pluralize(@user_survey.errors.count, "error") %> prohibited this user from being saved:
+        <ul>
+            <% @user_survey.errors.full_messages.each do |message| %>
+            <li>
+                <%= message %>
+            </li>
+            <% end %>
+        </ul>
+    </div>
+<% end %> 
+
+<% if flash[:new_survey_errors]%>
+    <% flash[:new_survey_errors].each do |err|%>
+        <p><%=err%></p>
+    <% end%>
+<% end%>
+
+<%# ANOTHER WAY TO CHECK FOR AND DISPLAY FLASH %>
+ <% if !flash.empty? %>
+     <div id="flash">
+         <% flash.keys.each do |k| %>
+             <div class="<%= k %>">
+                 <%= flash[k] %> k is <%=k%>
+             </div>
+        <% end %>
+    </div>
+<% end %>
+
+<p>User_survey created in create method is <%= @user_survey %></p>
+<%# => No error, if this instance variable does not exist, due to forced declaration / definition via 
+Rails of instance variables.
+This happens in our case because WE REDIRECTED from CREATE method, vs RENDERED this view %>
+
+<p>Survey object created and passed from create method as params[:survey] is <%= params[:survey] %></p>
+<%# Empty  - IF this view is REDIRECTED TO from another action method %>
+<%# => Should NOT cause error, as key just does not exist. %>
+
+<%# IF template is RENDERED directly from another controller action method (not one that would normally 
+render it), the request.params existing in the controller method which calls the template will exist in 
+this template, just as instance variable defined in same controller will exist/be known to this view %>
+<p>request.params are passed from create method: <%= params %></p>
+
+<table>
+  <tbody>
+    <tr> 
+    <%# {"controller"=>"surveys", "action"=>"result", "id"=>"34"}  %>
+        <td>Your Name: </td>
+        <td><%=@user_survey.your_name%></td>
+    </tr>
+    <tr>
+        <td>Dojo Location: </td>
+        <td><%=@user_survey.dojo_loc %></td>
+    </tr><tr>
+        <td>Favourite Language: </td>
+        <td><%=@user_survey.fave_lang %></td>
+    </tr><tr>
+        <td>Comment: </td>
+        <td><%=@user_survey.comment %></td>
+        <td><%= @survey %></td>
+        <%# @survey does not exist, so it does not render, 
+        but no error is thrown by Rails due to forced defining to nil v=by Rails %>
+    </tr>
+  </tbody>
+</table>
+
+<%=current_page?(@surveys_path) %> 
+<%# true - WHY?? because will always evaluate to true, Rails considers this an instance variable%>
+<%=current_page?(surveys_result_path(:survey))%> 
+<%# false 
+        - because :survey does not even exist %>
+
+<%=current_page?(surveys_result_path)%>
+<%# false %>
+<%=current_page?(@surveys_result_path)%>
+<%# true - WHY?? because will always evaluate to true, Rails considers this an instance variable%>
+
+<%=current_page?(surveys_result_path(@user_survey))%>
+<%# true - This IS actually TRUE if successful save of new object in CREATE method %>
+
+<%=link_to 'Back', root_path%>
+
+<%# <%= link_to 'New User', new_user_path %>
+<%# 
+current_page?(product_path(@product))
+ => true %>

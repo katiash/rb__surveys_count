@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  your_name: MyString
+  dojo_loc: MyString
+  fave_lang: MyString
+  comment: MyText
+
+two:
+  your_name: MyString
+  dojo_loc: MyString
+  fave_lang: MyString
+  comment: MyText
